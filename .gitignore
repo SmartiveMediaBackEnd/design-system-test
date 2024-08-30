@@ -15,7 +15,7 @@ dist-ssr
 
 temp
 test
-
+copy-files.sh
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
