@@ -12,7 +12,8 @@ dist
 dist-ssr
 *.local
 
-
+old-app/
+admin/
 temp
 test
 copy-files.sh
