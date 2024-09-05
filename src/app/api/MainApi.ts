@@ -1,17 +1,19 @@
 import axios from 'axios';
 import PublicHandlingErrors from '../utils/AxiosUtils/PublicHandlingErrors';
+import { getCookie } from '../utils';
 
 //  get url from saved domain
-let custom_Basic_Url: string | null | undefined = 'my.dookan.net';
-
+let custom_Basic_Url: string | null | undefined = '';
 if (typeof window !== 'undefined') {
-    custom_Basic_Url = localStorage.getItem('domain');
-    
+	custom_Basic_Url = getCookie('authDomain');
 }
 
-export const baseUrl = `https://${custom_Basic_Url}/api/v1/`;
+// export const baseUrl = custom_B `https://${custom_Basic_Url}/api/v1/`
+	
 
-
+export const baseUrl = custom_Basic_Url
+	? `https://${custom_Basic_Url}/api/v1/`
+	: 'https://my.dookan.net/api/v1/';
 
 const MainApi = axios.create({
 	baseURL: baseUrl,
@@ -23,7 +25,7 @@ MainApi.interceptors.request.use(
 		let language = undefined;
 
 		if (typeof window !== 'undefined') {
-			token = localStorage.getItem('token');
+			token = getCookie('authToken');;
 			language = localStorage.getItem('language');
 		}
 
@@ -67,109 +69,49 @@ export default MainApi;
 
 
 
-
-
-
-
-
-
-
-
-
-
-///////////***************************************************** */
 // import axios from 'axios';
 // import PublicHandlingErrors from '../utils/AxiosUtils/PublicHandlingErrors';
 
-// //  get url from saved domain
-// let custom_Basic_Url: string | null | undefined= 'my.dookan.net';
+// // Get URL from saved domain
+// let custom_Basic_Url: string | null = 'my.dookan.net';
 
 // if (typeof window !== 'undefined') {
-//     custom_Basic_Url = localStorage.getItem('domain') || 'my.dookan.net';
+// 	custom_Basic_Url = localStorage.getItem('domain') || custom_Basic_Url;
 // }
 
-// export const baseUrl = `https://${custom_Basic_Url}/api/v1/admin`;
+// export const baseUrl = `https://${custom_Basic_Url}/api/v1/`;
 
 // const MainApi = axios.create({
 // 	baseURL: baseUrl,
 // });
 
-
-
 // MainApi.interceptors.request.use(
-//     function (config) {
-//         let token = undefined;
-// 		let language = undefined;
+// 	(config) => {
+// 		let token: string | null = null;
+// 		let language: string | null = 'en'; // Default language is English
 
 // 		if (typeof window !== 'undefined') {
 // 			token = localStorage.getItem('token');
-// 			language = localStorage.getItem('language');
+// 			language = localStorage.getItem('language') || language;
 // 		}
 
-//         if (token) {
-//             config.headers['Authorization'] = `Bearer ${token}`;
-//         }
-//         if (language) {
-//             config.params = config.params || {};
-//             config.params['locale'] = language;
-//         }
-//         config.params = config.params || {};
-//         config.params['accept_token'] = true;
+// 		if (token) {
+// 			config.headers.Authorization = `Bearer ${token}`;
+// 		}
 
-//         return config;
-//     },
-//     function (error) {
-//         // التعامل مع أخطاء الطلب
-//         return PublicHandlingErrors.onErrorResponse(error);
-//     },
-// );
+// 		if (!config.params) {
+// 			config.params = {};
+// 		}
 
-// export default MainApi;
+// 		config.params['locale'] = language;
+// 		config.params['accept_token'] = true;
 
-
-
-
-
-////////////////////////////////////////////////////////////////
-
-// import axios from 'axios';
-// import PublicHandlingErrors from '../utils/AxiosUtils/PublicHandlingErrors';
-
-// // Get URL from saved domain or default to 'my.dookan.net'
-// let custom_Basic_Url = '';
-
-// if (typeof window !== 'undefined') {
-//     custom_Basic_Url = localStorage.getItem('domain') || 'my.dookan.net';
-// }
-
-// export const baseUrl = `https://${custom_Basic_Url}/api/v1/admin`;
-
-// const MainApi = axios.create({
-//     baseURL: baseUrl,
-// });
-
-// MainApi.interceptors.request.use(
-//     function (config) {
-//         const token = localStorage.getItem('token');
-//         const language = localStorage.getItem('language');
-
-//         if (token) {
-//             config.headers['Authorization'] = `Bearer ${token}`;
-//         }
-
-//         if (language) {
-//             config.params = config.params || {};
-//             config.params['locale'] = language;
-//         }
-
-//         config.params = config.params || {};
-//         config.params['accept_token'] = true;
-
-//         return config;
-//     },
-//     function (error) {
-//         return PublicHandlingErrors.onErrorResponse(error);
-//     },
+// 		return config;
+// 	},
+// 	(error) => {
+// 		// Handle request error
+// 		return PublicHandlingErrors.onErrorResponse(error);
+// 	}
 // );
 
 // export default MainApi;

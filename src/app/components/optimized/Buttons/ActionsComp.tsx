@@ -43,13 +43,13 @@ export default function ActionsComp({
 			)}
 			{/*   arrange button */}
 
-			{sortMenus && sortMenus?.length > 0 && (
+			{/* {sortMenus && sortMenus?.length > 0 && (
 				<ArrangeButton
 					sortMenus={sortMenus}
 					selectedOption={selectedOption}
 					handelSelect={handelSelect}
 				/>
-			)}
+			)} */}
 
 			{/*  filter button */}
 

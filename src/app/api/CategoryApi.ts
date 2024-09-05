@@ -3,16 +3,14 @@ import PublicHandlingErrors from '../utils/AxiosUtils/PublicHandlingErrors';
 
 //  get url from saved domain
 let custom_Basic_Url: string | null | undefined = 'my.dookan.net';
-
 if (typeof window !== 'undefined') {
 	custom_Basic_Url = localStorage.getItem('domain');
-	console.log('Custom Basic URL:', custom_Basic_Url); 
 }
 
-export const baseUrl =`https://${custom_Basic_Url}/api/v1/`;
-	
 
-	console.log('Base URL:', baseUrl);
+export const baseUrl = custom_Basic_Url
+	? `https://${custom_Basic_Url}/api/v1/`
+	: 'https://my.dookan.net/api/v1/';
 
 const CategoryApi = axios.create({
 	baseURL: baseUrl,

@@ -24,8 +24,6 @@ export default function Nested_pages_SettingsConfig() {
 			return <PaymentProvidersPage />;
 		case 'add-Payment-Method':
 			return <AddPaymentMethod />;
-		case 'add-Payment-Method':
-			return <AddPaymentMethod />;
 		case 'add-Payment-system-Method':
 			return <Add_payment_system_methods />;
 	}

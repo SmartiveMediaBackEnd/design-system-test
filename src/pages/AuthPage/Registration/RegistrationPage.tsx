@@ -9,6 +9,7 @@ import RegisterLayout from '../_comp/RegisterLayout';
 import AboutYourBusiness from './_tabs/AboutYourBusiness/AboutYourBusiness';
 import StepNavigator from 'src/app/components/optimized/Tabs/StepNavigator';
 import { useNavigate } from 'react-router-dom';
+import { getCookie } from 'src/app/utils';
 
 export default function RegistrationPage() {
 	const { t } = useTranslation();
@@ -16,7 +17,11 @@ export default function RegistrationPage() {
 	const { goNext, activeStep, setActiveStep } = useStepNavigator();
 
 	const handleFinish = () => {
-		window.location.href = '/home';
+		// window.location.href = '/home';
+
+		
+
+		console.log('aa' )
 	};
 
 	const firstTab = isLogin ? (

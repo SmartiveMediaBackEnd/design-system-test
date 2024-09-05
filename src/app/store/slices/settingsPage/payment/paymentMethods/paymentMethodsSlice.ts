@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { paymentMethodsReducer } from './paymentMethodsExtraReducer';
 import { paymentMethodsSliceModel } from 'src/app/models/settingsModels/paymentMethodsSettingsModel';
 import { getPayment_Method_SystemInitial } from 'src/app/interface/settingsInterface/MerchantPaymentMethodsSettingsInterface';
+// import { getPayment_Method_SystemInitial } from 'src/app/interface/settingsInterface/MerchantPaymentMethodsSettingsInterface';
 
 const initialState: paymentMethodsSliceModel = {
 	paymentList: [],

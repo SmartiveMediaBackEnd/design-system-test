@@ -5,7 +5,7 @@ import { useMutation } from 'react-query';
 import toast from 'react-hot-toast';
 import PublicHandlingErrors from 'src/app/utils/AxiosUtils/PublicHandlingErrors';
 import { AuthApi } from 'src/app/React-Query/authApi';
-import Cookies from 'js-cookie';
+import { getCookie } from 'src/app/utils';
 
 export interface AboutYourBusinessInterface {
 	name: string;
@@ -49,66 +49,34 @@ export default function useAboutYourBusiness({ onFinish }: { onFinish: () => voi
 	}
 	//  linking with api
 	const { mutate, isLoading, error } = useMutation('sign-up', AuthApi.signUp_secondStep);
+	const handleSubmit = (values: AboutYourBusinessInterface) => {
+		let SendingData = {
+			...values,
+			...userInfoData,
+		};
+		//Perform verification before moving to the next step
+		mutate(SendingData, {
+			onSuccess: async (response) => {
+				onFinish();
+				localStorage.setItem('token', response?.data?.data?.token);
+				localStorage.setItem('domain', response?.data?.data?.data?.company?.domain);
+				// set to cookie
+				document.cookie = `authToken=${response?.data?.data?.token}; domain=.dookan.net; path=/; secure; SameSite=None`;
+				document.cookie = `authDomain=${response?.data?.data?.data?.company?.domain}; domain=.dookan.net; path=/; secure; SameSite=None`;
 
+				const authDomain = getCookie('authDomain');
 
-const handleSubdomainRedirection = () => {
-    const currentDomain = localStorage.getItem('domain');
-    if (currentDomain) {
-        const subdomain = currentDomain.split('.')[0];
-        const redirectUrl = `https://${subdomain}.dookan.net/admin/home`;
-        window.location.href = redirectUrl;
-    }
-};
-
-
-
-const handleSubmit = (values: AboutYourBusinessInterface) => {
-	let domain = localStorage.getItem('domain') || '';
-	let token = localStorage.getItem('token') || '';
-
-	let SendingData = {
-		...values,
-		...userInfoData,
-		domain,
-		token,
-	};
-
-	console.log("Sending Data:", SendingData);
-
-	const currentUrl = window.location.href;
-
-	mutate(SendingData, {
-		onSuccess: async (response) => {
-			console.log("API Response:", response);
-			onFinish();
-
-			const responseToken = response?.data?.data?.token;
-			const responseDomain = response?.data?.data?.data?.company?.domain;
-			const responsePanelUrl = response?.data?.data?.merchant_url?.panel;
-
-			localStorage.setItem('token', responseToken);
-			localStorage.setItem('domain', responseDomain);
-
-			Cookies.set('token', responseToken, { domain: '.dookan.net', path: '/' });
-			Cookies.set('domain', responseDomain, { domain: '.dookan.net', path: '/' });
-
-			toast.success(response?.data?.message);
-
-			if (responsePanelUrl) {
-				if(currentUrl.includes('localhost')){
-					window.location.href = 'http://localhost:5173';
+				if (authDomain) {
+					window.location.href = `https://${authDomain}`; 
 				} else {
-					window.location.href = responsePanelUrl; // for production
+					console.error('authDomain not found.');
 				}
-				 
-			}
-			
-		},
-		onError: PublicHandlingErrors.onErrorResponse,
-	});
-};
 
-
+				toast.success(response?.data?.message);
+			},
+			onError: PublicHandlingErrors.onErrorResponse,
+		});
+	};
 	// /////////////////
 	// ////////////////
 	const industryOptions = [
@@ -124,84 +92,3 @@ const handleSubmit = (values: AboutYourBusinessInterface) => {
 
 	return { formStore, onSubmit, industryOptions, isLoading };
 }
-
-
-
-	// const handleSubmit = (values: AboutYourBusinessInterface) => {
-	// 	let SendingData = {
-	// 		...values,
-	// 		...userInfoData,
-	// 	};
-	// 	//Perform verification before moving to the next step
-	// 	mutate(SendingData, {
-	// 		onSuccess: async (response) => {
-	// 			onFinish();
-	// 			localStorage.setItem('token', response?.data?.data?.token);
-	// 			localStorage.setItem('domain', response?.data?.data?.data?.company?.domain);
-	// 			toast.success(response?.data?.message);
-	// 		},
-	// 		onError: PublicHandlingErrors.onErrorResponse,
-	// 	});
-	// };
-/////////////////////////////////////////////////////////////////////////////////////////
-	// const handleSubmit = (values: AboutYourBusinessInterface) => {
-	// 	let domain = localStorage.getItem('domain') || ''; 
-	
-	// 	let SendingData = {
-	// 		...values,
-	// 		...userInfoData,
-	// 		domain, 
-	// 	};
-	
-	// 	console.log("Sending Data:", SendingData); 
-	
-	// 	mutate(SendingData, {
-	// 		onSuccess: async (response) => {
-	// 			console.log("API Response:", response);
-	// 			onFinish();
-	// 			localStorage.setItem('token', response?.data?.data?.token);
-	// 			localStorage.setItem('domain', response?.data?.data?.data?.company?.domain);
-	// 			toast.success(response?.data?.message);
-	
-	// 			const clientUrl = response?.data?.data?.merchant_url?.client; 
-	// 			if (clientUrl) {
-	// 				window.location.href = clientUrl; 
-	// 			}
-	// 		},
-	// 		onError: PublicHandlingErrors.onErrorResponse,
-	// 	});
-	// };
-	///////////////////////////////////////////////////////////////////////////////
-
-
-
-// const handleSubmit = (values: AboutYourBusinessInterface) => {
-//     let domain = localStorage.getItem('domain') || ''; 
-
-//     let SendingData = {
-//         ...values,
-//         ...userInfoData,
-//         domain, 
-//     };
-
-//     console.log("Sending Data:", SendingData); 
-
-//     mutate(SendingData, {
-//         onSuccess: async (response) => {
-//             console.log("API Response:", response);
-//             onFinish();
-            
-//             Cookies.set('token', response?.data?.data?.token, { domain: '.dookan.net', secure: true, sameSite: 'None' });
-//             Cookies.set('domain', response?.data?.data?.data?.company?.domain, { domain: '.dookan.net', secure: true, sameSite: 'None' });
-
-//             toast.success(response?.data?.message);
-
-//             const clientUrl = response?.data?.data?.merchant_url?.client; 
-//             if (clientUrl) {
-//                 window.location.href = clientUrl; 
-//             }
-//         },
-//         onError: PublicHandlingErrors.onErrorResponse,
-//     });
-// };
-////////////////////////////////////////////////////
